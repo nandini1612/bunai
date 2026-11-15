@@ -3,6 +3,21 @@
 An explorable atlas of historic Indian textiles. A thousand public-domain pieces from four museums, arranged by
 visual likeness, by time and by colour, with guided stories told through the cloths themselves.
 
+![The Bunai landing page: the title beside five arched niches, each showing a textile from a different craft](docs/screenshots/landing.jpg)
+
+## A look around
+
+| | |
+|---|---|
+| ![The atlas: a thousand textile tiles arranged by visual likeness](docs/screenshots/atlas.jpg) | ![A palampore opened in the piece panel, with its colours named in Hindi and a note on the craft](docs/screenshots/piece.jpg) |
+| **The atlas.** Every piece placed by what it looks like. A vision model did the arranging; nobody told it what a paisley is. | **A piece.** Its date and place, its colours in the traditional dye vocabulary, how the craft works and how to spot it. |
+| ![A guided story: the palampores gathered into a block above the storyteller's card](docs/screenshots/story.jpg) | ![The collection stacked by half-century, with towers in the 1700s and 1800s](docs/screenshots/timeline.jpg) |
+| **A story.** Six guided tours, in English or Hindi. The pieces a step talks about step forward. | **By time.** Stacked by half-century. The towers show when museums were collecting, not when India wove most. |
+
+![The collection arranged by colour: hue as the angle, vividness as the distance from the centre](docs/screenshots/colour.jpg)
+
+**By colour.** Hue is the angle, vividness the distance from the centre.
+
 ## Run it
 
 ```bash
@@ -43,6 +58,7 @@ web/        index.html, style.css                      page and visual identity
             logo.js, logos.html                        the mark, and a comparison sheet of the alternatives
             selftest.js                                browser smoke test
             data/                                      items.json, atlas.webp, img/
+docs/       screenshots/, take-screenshots.mjs         the pictures in this README, and the script that retakes them
 ```
 
 `content.js` is kept apart from the code so the writing can be fact-checked and edited without touching logic.
