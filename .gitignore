@@ -1,0 +1,7 @@
+# rebuilt by the pipeline; large
+data/raw/
+data/images/
+data/feats.npz
+data/craft_model.joblib
+__pycache__/
+.venv/

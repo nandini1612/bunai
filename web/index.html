@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bunai — an atlas of Indian textiles</title>
+<link rel="icon" id="favicon" href="data:,">
+<meta name="description" content="Bunai is an explorable atlas of a thousand historic Indian textiles, arranged by likeness, time and colour, with stories told through the cloths themselves.">
+<meta name="theme-color" content="#141a3a">
+<meta property="og:title" content="Bunai — an atlas of Indian textiles">
+<meta property="og:description" content="A thousand cloths, woven, printed and painted in India across a thousand years.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Eczar:wght@400;500;600&family=Mukta:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=90">
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<canvas id="stage"></canvas>
+<div id="labels"></div>
+
+<header id="brand">
+  <h1><span class="logo" aria-hidden="true"></span>Bunai <span lang="hi">बुनाई</span></h1>
+  <p class="sub"><b id="count">—</b> <span id="countNote">Indian textiles</span></p>
+</header>
+
+<nav id="top" aria-label="Explore">
+  <button id="btnThreads" class="pill gold">Stories <span lang="hi">क़िस्से</span></button>
+  <button id="btnMine" class="pill" title="Upload a photo of a cloth you own and see where it sits in the atlas">Your cloth <span lang="hi">आपका कपड़ा</span></button>
+  <input id="mineFile" type="file" accept="image/jpeg,image/png,image/webp" hidden>
+  <button id="btnWander" class="pill" title="Jump to a random piece (W)">Wander <span lang="hi">सैर</span></button>
+  <button id="btnAbout" class="pill">About</button>
+</nav>
+
+<nav id="controls" aria-label="Arrange and filter">
+  <div class="group">
+    <span class="cap">Arrange by</span>
+    <div class="seg" id="layout">
+      <button data-v="galaxy" class="on">Likeness <span lang="hi">रूप</span></button>
+      <button data-v="time">Time <span lang="hi">काल</span></button>
+      <button data-v="colour">Colour <span lang="hi">रंग</span></button>
+    </div>
+  </div>
+  <div class="group">
+    <span class="cap">Outline by</span>
+    <div class="seg" id="groupby">
+      <button data-v="c" class="on">Craft</button>
+      <button data-v="r">Region</button>
+      <button data-v="s">Museum</button>
+    </div>
+    <ul id="legend"></ul>
+  </div>
+  <div class="group">
+    <span class="cap">Rang · colour <b id="dyeName"></b></span>
+    <div id="dyes"></div>
+    <p id="dyeNote" class="note"></p>
+  </div>
+  <div class="group">
+    <span class="cap">Made between <b id="yrLabel"></b></span>
+    <div class="range">
+      <input type="range" id="yr0" min="1200" max="2000" step="10" value="1200" aria-label="Earliest year">
+      <input type="range" id="yr1" min="1200" max="2000" step="10" value="2000" aria-label="Latest year">
+    </div>
+  </div>
+  <input id="search" type="search" placeholder="Search: sari, Kashmir, silk…" aria-label="Search">
+  <button id="reset" class="link" hidden>Clear all filters</button>
+  <p class="hint">Drag to move · scroll to zoom · click any piece</p>
+</nav>
+
+<div id="empty" hidden role="status"><p>No cloth here matches all of those filters.</p><button id="emptyClear" class="pill gold">Clear the filters</button></div>
+
+<div id="hover" hidden><img alt=""><div><b></b><small></small><em></em></div></div>
+
+<aside id="detail" hidden aria-label="Selected textile">
+  <button id="close" aria-label="Close">×</button>
+  <div class="imgwrap"><div class="arch"><div class="niche"><img id="dImg" alt=""></div></div></div>
+  <div class="body">
+    <p class="kicker"><span id="dCraft"></span> <span id="dCraftHi" lang="hi"></span></p>
+    <p id="dSource" class="labelsrc" hidden></p>
+    <h2 id="dTitle"></h2>
+    <p class="meta" id="dMeta"></p>
+    <div id="dPal" class="pal"></div>
+    <p class="medium" id="dMedium"></p>
+
+    <section class="card" id="dCraftCard">
+      <span class="cap">About this craft</span>
+      <p id="dWhat"></p>
+      <p id="dLook" class="look"></p>
+    </section>
+    <section id="dWordsWrap">
+      <span class="cap">Words worth knowing</span>
+      <dl id="dWords"></dl>
+    </section>
+
+    <span class="cap">Closest in likeness — click to follow</span>
+    <div id="dNN" class="nn"></div>
+    <div class="row share" id="dShare">
+      <button id="btnCard" class="pill dark">Make a share card</button>
+      <button id="btnCopy" class="pill light">Copy link</button>
+    </div>
+    <p class="credit" id="dCreditWrap"><a id="dLink" target="_blank" rel="noopener">See the full record at <span id="dSrc"></span> ↗</a><br><span id="dCredit"></span></p>
+    <p class="credit" id="dMine" hidden>Your photo was matched on this computer and was not saved or sent anywhere else.</p>
+  </div>
+</aside>
+
+<section id="story" hidden aria-live="polite">
+  <p class="kicker"><span id="sName"></span> · <span id="sStep"></span></p>
+  <h2 id="sTitle"></h2>
+  <p id="sText"></p>
+  <p class="note" id="sCount"></p>
+  <div class="row">
+    <button id="sExit" class="link">Leave the story</button>
+    <button id="sLang" class="link" lang="hi">हिंदी में पढ़ें</button>
+    <span class="grow"></span>
+    <button id="sPrev" class="pill">← Back</button>
+    <button id="sNext" class="pill gold">Next →</button>
+  </div>
+</section>
+
+<div id="mine" hidden title="Your cloth"><img alt="Your cloth"></div>
+<div id="toast" hidden role="status"></div>
+
+<div id="trail" hidden><span id="trailN"></span><button id="trailCut" class="link">cut the thread</button></div>
+
+<dialog id="threads">
+  <button class="x" data-close aria-label="Close">×</button>
+  <p class="kicker">Guided tours</p>
+  <h2>Qisse <span lang="hi">क़िस्से</span></h2>
+  <p class="lede">A qissa is a story told aloud. Here are six, told with the cloths themselves: each one lights up the pieces it is about.</p>
+  <div id="storyList"></div>
+</dialog>
+
+<dialog id="about">
+  <button class="x" data-close aria-label="Close">×</button>
+  <p class="kicker">About</p>
+  <h2>What you are looking at</h2>
+  <p><b id="aboutN"></b> textiles made in India between roughly the 10th and 20th centuries, from the open-access collections of the Metropolitan Museum of Art, the Cleveland Museum of Art, the Art Institute of Chicago and Cooper Hewitt. Every image is public domain (CC0).</p>
+  <p><b>Likeness</b> is computed, not curated. A vision model looked at each photograph and pieces that look alike were placed together. Nobody told it what a paisley is.</p>
+  <p><b>Craft, region and colour names are automatic.</b> A craft label is kept where the museum's record names the technique plainly. Where it does not, a model guesses from the photograph, and its guess is used only when it is confident: tested on pieces it had not seen, it was right <span id="aboutAcc">about two times in three</span>. Each piece says where its label came from. Colour names are the nearest traditional shade, and the dye notes describe how that shade was classically made, not a lab result for the piece.</p>
+  <p><b>This is a partial picture.</b> It shows what four American museums acquired, mostly in the 1800s and 1900s: court cloth, export goods and excavated fragments. Everyday cloth, and most of what India weaves today, is missing.</p>
+  <h3>Where the stories were checked</h3>
+  <p class="lede">Indian institutions and scholars come first. Museum catalogues are used for facts about particular objects, and peer-reviewed work for chemistry and legal history. Where a claim rests on colonial-era accounts, it says so.</p>
+  <div id="sources"></div>
+</dialog>
+
+<div id="intro">
+  <div class="hero">
+    <div class="inner">
+      <span class="logo big" aria-hidden="true"></span>
+      <p class="kicker">An atlas of Indian cloth</p>
+      <h1>Bunai</h1>
+      <p class="hi" lang="hi">बुनाई <span lang="en">· the act of weaving</span></p>
+      <p class="lede">A thousand cloths, woven, printed and painted in India across a thousand years, now kept in museums far from the hands that made them.</p>
+      <div class="row">
+        <button id="enter" class="pill gold big" disabled>Threading the loom…</button>
+        <button id="enterStory" class="pill big" disabled>Hear a story <span lang="hi">क़िस्सा</span></button>
+      </div>
+      <p class="doha" lang="hi">झीनी झीनी बीनी चदरिया<small lang="en">“Fine, fine is the weave of this cloth” · Kabir, weaver of Varanasi, 15th century</small></p>
+    </div>
+    <div class="arcade" id="arcade" aria-label="Five crafts from the collection"></div>
+  </div>
+  <div id="selvedge" aria-hidden="true"><div class="run"></div></div>
+</div>
+<script type="module" src="app.js?v=90"></script>
+</body>
+</html>

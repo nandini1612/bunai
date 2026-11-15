@@ -1,0 +1,7 @@
+# torch is installed separately from the CPU index (see README), then:
+transformers==5.23.0
+pillow==13.0.0
+numpy==2.5.4
+umap-learn==0.6.0
+scikit-learn==1.9.1
+joblib==1.6.0

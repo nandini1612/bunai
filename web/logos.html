@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bunai — logo options</title>
+<link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Eczar:wght@400;600&family=Mukta:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; padding: 32px; background: #141a3a; color: #f4ead6; font: 15px/1.5 Mukta, sans-serif; }
+  h1 { font: 400 34px "Rozha One", serif; margin: 0 0 4px; }
+  p { margin: 0 0 24px; color: #c9b8a6; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .opt { border: 1px solid rgba(210, 162, 76, .38); border-radius: 10px; overflow: hidden; }
+  .opt h2 { margin: 0; padding: 12px 16px; font: 600 16px Mukta, sans-serif; background: #3a0f1e; }
+  .opt h2 small { font-weight: 400; color: #c9b8a6; }
+  .row { display: flex; align-items: center; gap: 22px; padding: 22px 18px; }
+  .row.light { background: #f6eedc; color: #3a0f1e; }
+  .mark svg { display: block; }
+  .word { font: 400 44px/1 "Rozha One", serif; display: flex; align-items: center; gap: 12px; }
+  .word span { font-size: 24px; color: #d2a24c; }
+  .row.light .word span { color: #a8324e; }
+</style>
+</head>
+<body>
+<h1>Logo options</h1>
+<p>Three marks at three sizes, on the dark and light grounds the site uses. The one in use is set in <code>logo.js</code>.</p>
+<div class="grid" id="grid"></div>
+<script type="module">
+import { LOGOS, LOGO } from "./logo.js";
+const notes = { buta: "Buta: the shawl motif, woven inside", seal: "Seal: a printer's block with बु", loom: "Loom: warp over weft" };
+const sized = (svg, px) => { const d = document.createElement("div"); d.className = "mark"; d.innerHTML = svg; d.firstChild.style.height = px + "px"; d.firstChild.style.width = "auto"; return d; };
+document.getElementById("grid").append(...Object.entries(LOGOS).map(([key, draw]) => {
+  const opt = document.createElement("div"); opt.className = "opt";
+  opt.innerHTML = `<h2>${notes[key]} <small>${key === LOGO ? "· in use" : ""}</small></h2>`;
+  for (const cls of ["", "light"]) {
+    const row = document.createElement("div"); row.className = "row " + cls;
+    const word = document.createElement("div"); word.className = "word";
+    word.append(sized(draw(), 56), "Bunai", Object.assign(document.createElement("span"), { textContent: "बुनाई" }));
+    row.append(sized(draw(), 110), word, sized(draw(), 22));
+    opt.append(row);
+  }
+  return opt;
+}));
+</script>
+</body>
+</html>
