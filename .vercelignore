@@ -1,5 +1,6 @@
 # The hosted site is the static web/ folder only.
 # Keeping the Python side out of the upload stops Vercel treating this as a Python app.
-pipeline/
-data/
-requirements.txt
+# The leading slash matters: without it, "data/" would also match web/data/, the collection itself.
+/pipeline/
+/data/
+/requirements.txt
